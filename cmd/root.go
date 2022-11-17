@@ -31,13 +31,10 @@ func init() {
 	rootCmd.Flags().BoolVarP(&flag.Verbose, "verbose", "v", false, "Verbose mode")
 
 	rootCmd.Run = func(cmd1 *cobra.Command, args []string) {
-		if os.Args[1] == "help" {
-			fmt.Print(rootCmd.UsageString())
-			os.Exit(1)
-		} else if hostIsValid(os.Args[1]) {
+		if hostIsValid(args[0]) {
 			flag.Host = os.Args[1]
 		} else {
-			fmt.Println("host given invalid")
+			fmt.Println("Invalid host given")
 			fmt.Print(rootCmd.UsageString())
 			os.Exit(1)
 		}
