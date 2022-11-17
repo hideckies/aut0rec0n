@@ -3,6 +3,8 @@ package recon
 import (
 	"fmt"
 	"strings"
+
+	"github.com/hideckies/aut0rec0n/recon/script"
 )
 
 const logo = `
@@ -21,6 +23,12 @@ type Recon struct {
 func (r *Recon) Run() {
 	r.Banner()
 	fmt.Println("Start1ng a rec0n...")
+	fmt.Println()
+
+	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "dns") {
+		sDns := script.DNS{}
+		sDns.Run(r.Conf.Host)
+	}
 }
 
 func (r *Recon) Banner() {
@@ -34,4 +42,14 @@ func (r *Recon) Banner() {
 	fmt.Printf("|- Verbose	: %t\n", r.Conf.Verbose)
 	// fmt.Printf("|------------------------------+\n")
 	fmt.Println()
+}
+
+func contains(s []string, str string) bool {
+	for _, v := range s {
+		if v == str {
+			return true
+		}
+	}
+
+	return false
 }
