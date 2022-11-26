@@ -3,6 +3,7 @@ package script
 import (
 	"fmt"
 	"net"
+	"strings"
 )
 
 type DNS struct {
@@ -12,70 +13,108 @@ type DNS struct {
 	MXs     []*net.MX
 	NSs     []*net.NS
 	TXTs    []string
+
+	Result string
 }
 
-func (d *DNS) Run(host string) {
-	// lookup
+func (d *DNS) Execute(host string) {
+	// IP Address
 	ips, err := net.LookupIP(host)
 	if err != nil {
-		fmt.Printf("IP address: %s\n", err)
+		// fmt.Printf("\tx %s\n", err)
 	}
-	for _, ip := range ips {
-		fmt.Printf("IP address: %s\n", ip)
-	}
-
 	d.IPs = ips
 
-	// reverse lookup
+	// Domain
 	domains, err := net.LookupAddr(host)
 	if err != nil {
-		fmt.Printf("Domain name: %s\n", err)
+		// fmt.Printf("\tx %s\n", err)
 	}
-	for _, domain := range domains {
-		fmt.Printf("Domain name: %s\n", domain)
-	}
-
 	d.Domains = domains
 
-	// cname
+	// CNAME
 	cname, err := net.LookupCNAME(host)
-	if err != nil {
-		fmt.Printf("CNAME: %s\n", err)
-	}
-	fmt.Printf("CNAME: %s\n", cname)
-
 	d.CNAME = cname
 
-	// mx
+	// MX
 	mxs, err := net.LookupMX(host)
 	if err != nil {
-		fmt.Printf("MX: %s\n", err)
+		// fmt.Printf("\tx %s\n", err)
 	}
-	for _, mx := range mxs {
-		fmt.Printf("MX: %v\n", mx.Host)
-	}
-
 	d.MXs = mxs
 
-	// ns
+	// NS
 	nss, err := net.LookupNS(host)
 	if err != nil {
-		fmt.Printf("NS: %s\n", err)
+		// fmt.Printf("\tx %s\n", err)
 	}
-	for _, ns := range nss {
-		fmt.Printf("NS: %v\n", ns.Host)
-	}
-
 	d.NSs = nss
 
-	// txt
+	// TXT
 	txts, err := net.LookupTXT(host)
 	if err != nil {
-		fmt.Printf("TXT: %s\n", err)
+		// fmt.Printf("\tx %s\n", err)
 	}
-	for _, txt := range txts {
-		fmt.Printf("TXT: %s\n", txt)
+	d.TXTs = txts
+
+	// zone transfer (AXFR)
+
+	d.createResult(host)
+}
+
+// create a result
+func (d *DNS) createResult(host string) {
+	ips := []string{}
+	for _, ip := range d.IPs {
+		ips = append(ips, ip.String())
 	}
 
-	d.TXTs = txts
+	mxs := []string{}
+	for _, mx := range d.MXs {
+		mxs = append(mxs, mx.Host)
+	}
+
+	nss := []string{}
+	for _, ns := range d.NSs {
+		nss = append(nss, ns.Host)
+	}
+
+	d.Result = fmt.Sprintf(`
+=================================================================
+DNS Reconnaissance for %s
+=================================================================
+
+■ IP Address
+
+%s
+
+■ Domain
+
+%s
+
+■ CNAME
+
+%s
+
+■ MX
+
+%s
+
+■ NS
+
+%s
+
+■ TXT
+
+%s
+
+=================================================================
+`,
+		host,
+		strings.Join(ips, "\n"),
+		strings.Join(d.Domains, "\n"),
+		d.CNAME,
+		strings.Join(mxs, "\n"),
+		strings.Join(nss, "\n"),
+		strings.Join(d.TXTs, "\n"))
 }

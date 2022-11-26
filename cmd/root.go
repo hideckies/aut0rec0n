@@ -17,22 +17,24 @@ var rootCmd = &cobra.Command{
 	Long:         ``,
 	SilenceUsage: false,
 	Example: `
-aut0rec0n example.com
-aut0rec0n example.com --dns`,
+  aut0rec0n example.com
+  aut0rec0n --script dns,port example.com`,
 	Args: cobra.ExactArgs(1),
 }
 
 func init() {
 	flag := Flag{}
 
-	rootCmd.Flags().StringSliceVarP(&flag.Script, "script", "s", []string{"all"}, "")
+	rootCmd.Flags().StringSliceVarP(&flag.Script, "script", "s", []string{"dns", "port", "subdomain"}, "List of scripts")
 	rootCmd.Flags().BoolVarP(&flag.Color, "color", "c", false, "Colorize the output")
-	rootCmd.Flags().StringVarP(&flag.OutputDir, "output", "o", "./rec0n", "Output directory")
+	rootCmd.Flags().StringVarP(&flag.OutputDir, "output", "o", "./aut0rec0n-result", "Output directory")
+	rootCmd.Flags().BoolVarP(&flag.NoOutput, "no-output", "", false, "Disable output")
+	rootCmd.Flags().BoolVarP(&flag.Quiet, "quiet", "q", false, "Quiet mode")
 	rootCmd.Flags().BoolVarP(&flag.Verbose, "verbose", "v", false, "Verbose mode")
 
 	rootCmd.Run = func(cmd1 *cobra.Command, args []string) {
 		if hostIsValid(args[0]) {
-			flag.Host = os.Args[1]
+			flag.Host = args[0]
 		} else {
 			fmt.Println("Invalid host given")
 			fmt.Print(rootCmd.UsageString())
@@ -44,6 +46,8 @@ func init() {
 			Script:    flag.Script,
 			Color:     flag.Color,
 			OutputDir: flag.OutputDir,
+			NoOutput:  flag.NoOutput,
+			Quiet:     flag.Quiet,
 			Verbose:   flag.Verbose,
 		}
 
