@@ -18,6 +18,9 @@ type DNS struct {
 }
 
 func (d *DNS) Execute(host string) {
+	fmt.Println()
+	fmt.Println("Starting DNS reconnaissance...")
+
 	// IP Address
 	ips, err := net.LookupIP(host)
 	if err != nil {

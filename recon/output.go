@@ -28,9 +28,13 @@ func Output(recon *Recon) {
 		createFile(filenameDns, recon.sDns.Result)
 	}
 
-	// Port
-
 	// Subdomain
+	if recon.sSubdomain != nil {
+		filenameSubdomain := fmt.Sprintf("%s/subdomain.txt", dirname)
+		createFile(filenameSubdomain, recon.sSubdomain.Result)
+	}
+
+	// Port
 }
 
 func createFile(filename string, content string) {

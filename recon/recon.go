@@ -19,7 +19,8 @@ const logo2 = `
 type Recon struct {
 	Conf Config
 
-	sDns *script.DNS
+	sDns       *script.DNS
+	sSubdomain *script.Subdomain
 }
 
 func (r *Recon) Run() {
@@ -37,7 +38,12 @@ func (r *Recon) Run() {
 	}
 
 	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "port") {
-		// fmt.Println("Port mapping")
+		r.sSubdomain = &script.Subdomain{}
+		r.sSubdomain.Execute(r.Conf.Host)
+
+		if !r.Conf.Quiet {
+			fmt.Print(r.sSubdomain.Result)
+		}
 	}
 
 	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "subdomain") {
