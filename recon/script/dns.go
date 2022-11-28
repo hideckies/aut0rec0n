@@ -84,33 +84,20 @@ func (d *DNS) createResult(host string) {
 
 	d.Result = fmt.Sprintf(`
 =================================================================
-DNS Reconnaissance for %s
+DNS records for %s
 =================================================================
-
 ■ IP Address
-
 %s
-
 ■ Domain
-
 %s
-
 ■ CNAME
-
 %s
-
 ■ MX
-
 %s
-
 ■ NS
-
 %s
-
 ■ TXT
-
 %s
-
 =================================================================
 `,
 		host,

@@ -37,7 +37,7 @@ func (r *Recon) Run() {
 		}
 	}
 
-	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "port") {
+	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "subdomain") {
 		r.sSubdomain = &script.Subdomain{}
 		r.sSubdomain.Execute(r.Conf.Host)
 
@@ -46,8 +46,8 @@ func (r *Recon) Run() {
 		}
 	}
 
-	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "subdomain") {
-		// fmt.Println("Subdomain scanner")
+	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "port") {
+		// fmt.Println("Port scanning")
 	}
 
 	if !r.Conf.NoOutput {
