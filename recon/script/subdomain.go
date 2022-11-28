@@ -2,9 +2,9 @@ package script
 
 import (
 	"fmt"
-	"io/ioutil"
-	"net/http"
 	"strings"
+
+	googlesearch "github.com/rocketlaunchr/google-search"
 )
 
 type Subdomain struct {
@@ -17,28 +17,53 @@ func (s *Subdomain) Execute(host string) {
 	fmt.Println()
 	fmt.Println("Starting subdomain scan...")
 
-	searchUrl := fmt.Sprintf("https://www.google.com/search?q=site:%s", host)
-	fetchUrl(searchUrl)
+	// userAgent := "aut0rec0n by h1d3k1 15h1gur0 repository -> https://github.com/hideckies/aut0rec0n"
+	userAgent := "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.3"
+
+	var subdomains []string
+	subdomains = append(subdomains, enumFromGoogle(host, userAgent)...)
+
+	s.Subdomains = subdomains
 
 	s.createResult(host)
 }
 
-func fetchUrl(url string) {
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", url, nil)
+func enumFromGoogle(host string, userAgent string) []string {
+	searchTxt := fmt.Sprintf("site:%s", host)
+	results, err := googlesearch.Search(
+		nil,
+		searchTxt,
+		googlesearch.SearchOptions{
+			Limit:     100,
+			UserAgent: userAgent,
+		})
 	if err != nil {
 		fmt.Println(err)
+		return []string{}
 	}
-	req.Header.Add("User-Agent", "aut0rec0n by h1d3k1 15h1gur0 repository -> https://github.com/hideckies/aut0rec0n")
-	resp, err := client.Do(req)
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer resp.Body.Close()
 
-	html, _ := ioutil.ReadAll(resp.Body)
-	htmlStr := string(html)
-	fmt.Println(htmlStr)
+	var subdomains []string
+
+	for _, result := range results {
+		resultUrl := result.URL
+		separatedUrls := strings.Split(resultUrl, "/")
+		subdomain := strings.Join(separatedUrls[2:3], "/")
+
+		if subdomain != host && !domainContains(subdomains, subdomain) {
+			subdomains = append(subdomains, subdomain)
+		}
+	}
+
+	return subdomains
+}
+
+func domainContains(domains []string, targetDomain string) bool {
+	for _, domain := range domains {
+		if domain == targetDomain {
+			return true
+		}
+	}
+	return false
 }
 
 func (s *Subdomain) createResult(host string) {
@@ -49,11 +74,9 @@ func (s *Subdomain) createResult(host string) {
 
 	s.Result = fmt.Sprintf(`
 =================================================================
-Subdomain Scanning for %s
+Subdomains for %s
 =================================================================
-
 %s
-
 =================================================================
 `,
 		host,
