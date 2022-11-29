@@ -22,6 +22,12 @@ func Output(recon *Recon) {
 		fmt.Printf("%s\n", err)
 	}
 
+	// WHOIS
+	if recon.sWhois != nil {
+		filenameWhois := fmt.Sprintf("%s/whois.txt", dirname)
+		createFile(filenameWhois, recon.sWhois.Result)
+	}
+
 	// DNS
 	if recon.sDns != nil {
 		filenameDns := fmt.Sprintf("%s/dns.txt", dirname)

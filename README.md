@@ -6,7 +6,12 @@ A automatic reconnaissance tool.
 
 ## Usage
 
-coming soon.
+```sh
+aut0rec0n example.com
+
+# Specify scripts
+aut0rec0n example.com --script dns,subdomain
+```
 
 <br />
 
