@@ -21,6 +21,7 @@ type Recon struct {
 
 	sDns       *script.DNS
 	sSubdomain *script.Subdomain
+	sWhois     *script.Whois
 }
 
 func (r *Recon) Run() {
@@ -28,6 +29,17 @@ func (r *Recon) Run() {
 	fmt.Println("Start1ng a rec0n...")
 	fmt.Println()
 
+	// WHOIS
+	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "whois") {
+		r.sWhois = &script.Whois{}
+		r.sWhois.Execute(r.Conf.Host)
+
+		if !r.Conf.Quiet {
+			fmt.Print(r.sWhois.Result)
+		}
+	}
+
+	// DNS
 	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "dns") {
 		r.sDns = &script.DNS{}
 		r.sDns.Execute(r.Conf.Host)
@@ -37,6 +49,7 @@ func (r *Recon) Run() {
 		}
 	}
 
+	// Subdomain
 	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "subdomain") {
 		r.sSubdomain = &script.Subdomain{}
 		r.sSubdomain.Execute(r.Conf.Host)
@@ -46,6 +59,7 @@ func (r *Recon) Run() {
 		}
 	}
 
+	// Port
 	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "port") {
 		// fmt.Println("Port scanning")
 	}
