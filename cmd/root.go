@@ -25,7 +25,7 @@ var rootCmd = &cobra.Command{
 func init() {
 	flag := Flag{}
 
-	rootCmd.Flags().StringSliceVarP(&flag.Script, "script", "s", []string{"dns", "port", "subdomain", "whois"}, "List of scripts")
+	rootCmd.Flags().StringSliceVarP(&flag.Script, "script", "s", []string{"dns", "port", "subdomain", "web-archive", "whois"}, "List of scripts")
 	rootCmd.Flags().BoolVarP(&flag.Color, "color", "c", false, "Colorize the output")
 	rootCmd.Flags().StringVarP(&flag.OutputDir, "output", "o", "./aut0rec0n-result", "Output directory")
 	rootCmd.Flags().BoolVarP(&flag.NoOutput, "no-output", "", false, "Disable output")

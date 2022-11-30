@@ -19,9 +19,10 @@ const logo2 = `
 type Recon struct {
 	Conf Config
 
-	sDns       *script.DNS
-	sSubdomain *script.Subdomain
-	sWhois     *script.Whois
+	sDns        *script.DNS
+	sSubdomain  *script.Subdomain
+	sWebArchive *script.WebArchive
+	sWhois      *script.Whois
 }
 
 func (r *Recon) Run() {
@@ -56,6 +57,24 @@ func (r *Recon) Run() {
 
 		if !r.Conf.Quiet {
 			fmt.Print(r.sSubdomain.Result)
+		}
+	}
+
+	// Web archive
+	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "web-archive") {
+		r.sWebArchive = &script.WebArchive{}
+
+		var subdomains []string
+		if r.sSubdomain != nil && r.sSubdomain.Subdomains != nil {
+			subdomains = r.sSubdomain.Subdomains
+		} else {
+			subdomains = []string{}
+		}
+
+		r.sWebArchive.Execute(r.Conf.Host, subdomains)
+
+		if !r.Conf.Quiet {
+			fmt.Print(r.sWebArchive.Result)
 		}
 	}
 
