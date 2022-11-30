@@ -40,6 +40,12 @@ func Output(recon *Recon) {
 		createFile(filenameSubdomain, recon.sSubdomain.Result)
 	}
 
+	// Web archive
+	if recon.sWebArchive != nil {
+		filenameWebArchive := fmt.Sprintf("%s/web-archive.txt", dirname)
+		createFile(filenameWebArchive, recon.sWebArchive.Result)
+	}
+
 	// Port
 }
 
