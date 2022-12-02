@@ -2,6 +2,16 @@
 
 A automatic reconnaissance tool.
 
+- **DNS**
+    Golang net package
+- **Subdomain**
+    Google, [rocketlaunchr/google-search](https://github.com/rocketlaunchr/google-search)
+- **Web Archives**
+    Wayback Machine API
+- **WHOIS**
+    [domainr/whois](https://github.com/domainr/whois)
+    
+
 <br />
 
 ## Usage
