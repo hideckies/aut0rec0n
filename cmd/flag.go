@@ -11,4 +11,6 @@ type Flag struct {
 	NoOutput  bool
 	Quiet     bool
 	Verbose   bool
+
+	PrintVersion bool
 }

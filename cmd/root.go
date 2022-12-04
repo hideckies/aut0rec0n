@@ -11,8 +11,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var version = "0.0.2"
+
 var rootCmd = &cobra.Command{
 	Use:          "aut0rec0n",
+	Version:      version,
 	Short:        "An automatic reconnaissance tool",
 	Long:         ``,
 	SilenceUsage: false,
