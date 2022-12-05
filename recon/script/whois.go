@@ -17,11 +17,12 @@ func (w *Whois) Execute(host string) {
 
 	req, err := whois.NewRequest(host)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("! %v\n", err)
+		return
 	}
 	res, err := whois.DefaultClient.Fetch(req)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("! %v\n", err)
 	}
 	w.Records = string(res.Body)
 

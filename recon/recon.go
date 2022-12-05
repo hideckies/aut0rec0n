@@ -2,6 +2,7 @@ package recon
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/hideckies/aut0rec0n/recon/script"
@@ -25,35 +26,41 @@ type Recon struct {
 	sWhois      *script.Whois
 }
 
+// Run
 func (r *Recon) Run() {
-	r.Banner()
+	r.banner()
 	fmt.Println("Start1ng a rec0n...")
 	fmt.Println()
 
-	// WHOIS
-	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "whois") {
-		r.sWhois = &script.Whois{}
-		r.sWhois.Execute(r.Conf.Host)
-
-		if !r.Conf.Quiet {
-			fmt.Print(r.sWhois.Result)
-		}
-	}
+	host := r.Conf.Host
 
 	// DNS
 	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "dns") {
 		r.sDns = &script.DNS{}
-		r.sDns.Execute(r.Conf.Host)
+		r.sDns.Execute(host)
 
 		if !r.Conf.Quiet {
 			fmt.Print(r.sDns.Result)
 		}
 	}
 
+	// Option: Adjust host domain if DNS reconnaissance has been executed.
+	host = r.adjustHost()
+
+	// WHOIS
+	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "whois") {
+		r.sWhois = &script.Whois{}
+		r.sWhois.Execute(host)
+
+		if !r.Conf.Quiet {
+			fmt.Print(r.sWhois.Result)
+		}
+	}
+
 	// Subdomain
 	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "subdomain") {
 		r.sSubdomain = &script.Subdomain{}
-		r.sSubdomain.Execute(r.Conf.Host)
+		r.sSubdomain.Execute(host)
 
 		if !r.Conf.Quiet {
 			fmt.Print(r.sSubdomain.Result)
@@ -71,7 +78,7 @@ func (r *Recon) Run() {
 			subdomains = []string{}
 		}
 
-		r.sWebArchive.Execute(r.Conf.Host, subdomains)
+		r.sWebArchive.Execute(host, subdomains)
 
 		if !r.Conf.Quiet {
 			fmt.Print(r.sWebArchive.Result)
@@ -88,7 +95,8 @@ func (r *Recon) Run() {
 	}
 }
 
-func (r *Recon) Banner() {
+// Print banner
+func (r *Recon) banner() {
 	fmt.Println(logo2)
 	fmt.Println()
 	// fmt.Printf("|------------------------------+\n")
@@ -102,6 +110,30 @@ func (r *Recon) Banner() {
 	fmt.Println()
 }
 
+// Host adjustment
+func (r *Recon) adjustHost() string {
+	finalHost := ""
+	preHost := r.Conf.Host
+
+	if r.sDns != nil && len(r.sDns.Domains) > 0 {
+		newHost := r.sDns.Domains[0]
+		lastChar := newHost[len(newHost)-1:]
+		if lastChar == "." {
+			newHost = strings.TrimSuffix(newHost, ".")
+		}
+
+		reDomain := regexp.MustCompile(`^(([a-zA-Z]{1})|([a-zA-Z]{1}[a-zA-Z]{1})|([a-zA-Z]{1}[0-9]{1})|([0-9]{1}[a-zA-Z]{1})|([a-zA-Z0-9][a-zA-Z0-9-_]{1,61}[a-zA-Z0-9]))\.([a-zA-Z]{2,6}|[a-zA-Z0-9-]{2,30}\.[a-zA-Z]{2,3})$`)
+		if !reDomain.MatchString(preHost) {
+			finalHost = newHost
+		}
+	} else {
+		finalHost = preHost
+	}
+
+	return finalHost
+}
+
+// Given string slice contains the given string.
 func contains(s []string, str string) bool {
 	for _, v := range s {
 		if v == str {
