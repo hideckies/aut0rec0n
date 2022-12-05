@@ -21,7 +21,7 @@ var rootCmd = &cobra.Command{
 	SilenceUsage: false,
 	Example: `
   aut0rec0n example.com
-  aut0rec0n --script dns,port example.com`,
+  aut0rec0n example.com --script dns,subdomain`,
 	Args: cobra.ExactArgs(1),
 }
 

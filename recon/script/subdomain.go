@@ -17,7 +17,6 @@ func (s *Subdomain) Execute(host string) {
 	fmt.Println()
 	fmt.Println("Starting subdomain scan...")
 
-	// userAgent := "aut0rec0n by h1d3k1 15h1gur0 repository -> https://github.com/hideckies/aut0rec0n"
 	userAgent := "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.3"
 
 	var subdomains []string
