@@ -36,7 +36,7 @@ type closest struct {
 // Execute
 func (w *WebArchive) Execute(host string, subdomains []string) {
 	fmt.Println()
-	fmt.Println("Starting web archives reconnaissance...")
+	fmt.Println("Start web archives reconnaissance...")
 
 	domains := append(subdomains, host)
 	for _, domain := range domains {
@@ -84,7 +84,7 @@ func (w *WebArchive) createResult(host string) {
 		}
 		tm = time.Unix(i, 0)
 
-		subResult := fmt.Sprintf("■ %s\nStatus: %s\nURL: %s\nDate: %s\n", ar.Url, clos.Status, clos.Url, tm.String())
+		subResult := fmt.Sprintf("■ %s\nStatus: %s\nURL: %s\nDate: %s", ar.Url, clos.Status, clos.Url, tm.String())
 		subResults = append(subResults, subResult)
 	}
 

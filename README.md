@@ -19,6 +19,12 @@ aut0rec0n example.com
 aut0rec0n example.com --script dns,subdomain
 ```
 
+To print all scripts:
+
+```sh
+aut0rec0n --script-list
+```
+
 <br />
 
 ## Installation

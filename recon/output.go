@@ -23,21 +23,27 @@ func Output(recon *Recon) {
 	}
 
 	// WHOIS
-	if recon.sWhois != nil {
-		filenameWhois := fmt.Sprintf("%s/whois.txt", dirname)
-		createFile(filenameWhois, recon.sWhois.Result)
+	if recon.sWHOIS != nil {
+		filenameWHOIS := fmt.Sprintf("%s/whois.txt", dirname)
+		createFile(filenameWHOIS, recon.sWHOIS.Result)
 	}
 
 	// DNS
-	if recon.sDns != nil {
-		filenameDns := fmt.Sprintf("%s/dns.txt", dirname)
-		createFile(filenameDns, recon.sDns.Result)
+	if recon.sDNS != nil {
+		filenameDNS := fmt.Sprintf("%s/dns.txt", dirname)
+		createFile(filenameDNS, recon.sDNS.Result)
 	}
 
 	// Subdomain
 	if recon.sSubdomain != nil {
 		filenameSubdomain := fmt.Sprintf("%s/subdomain.txt", dirname)
 		createFile(filenameSubdomain, recon.sSubdomain.Result)
+	}
+
+	// SSL certificates
+	if recon.sSSL != nil {
+		filenameSSL := fmt.Sprintf("%s/ssl.txt", dirname)
+		createFile(filenameSSL, recon.sSSL.Result)
 	}
 
 	// Web archive

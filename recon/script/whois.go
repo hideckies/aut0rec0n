@@ -6,14 +6,14 @@ import (
 	"github.com/domainr/whois"
 )
 
-type Whois struct {
+type WHOIS struct {
 	Records string
 	Result  string
 }
 
-func (w *Whois) Execute(host string) {
+func (w *WHOIS) Execute(host string) {
 	fmt.Println()
-	fmt.Println("Starting WHOIS reconnaissance...")
+	fmt.Println("Start WHOIS reconnaissance...")
 
 	req, err := whois.NewRequest(host)
 	if err != nil {
@@ -29,7 +29,7 @@ func (w *Whois) Execute(host string) {
 	w.createResult(host)
 }
 
-func (w *Whois) createResult(host string) {
+func (w *WHOIS) createResult(host string) {
 	w.Result = fmt.Sprintf(`
 =================================================================
 WHOIS for %s
