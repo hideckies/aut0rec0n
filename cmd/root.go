@@ -13,6 +13,10 @@ import (
 
 var version = "0.0.2"
 
+var scriptList = `Scripts:
+asn, dns, port, ssl, subdomain, web-archive, whois
+`
+
 var rootCmd = &cobra.Command{
 	Use:          "aut0rec0n",
 	Version:      version,
@@ -22,13 +26,14 @@ var rootCmd = &cobra.Command{
 	Example: `
   aut0rec0n example.com
   aut0rec0n example.com --script dns,subdomain`,
-	Args: cobra.ExactArgs(1),
+	// Args: cobra.ExactArgs(1),
 }
 
 func init() {
 	flag := Flag{}
 
-	rootCmd.Flags().StringSliceVarP(&flag.Script, "script", "s", []string{"dns", "port", "subdomain", "web-archive", "whois"}, "List of scripts")
+	rootCmd.Flags().StringSliceVarP(&flag.Script, "script", "s", []string{"dns", "ssl", "subdomain", "whois"}, "Scripts to be executed")
+	rootCmd.Flags().BoolVarP(&flag.PrintScriptList, "script-list", "", false, "Print the list of scripts")
 	rootCmd.Flags().BoolVarP(&flag.Color, "color", "c", false, "Colorize the output")
 	rootCmd.Flags().StringVarP(&flag.OutputDir, "output", "o", "./aut0rec0n-result", "Output directory")
 	rootCmd.Flags().BoolVarP(&flag.NoOutput, "no-output", "", false, "Disable output")
@@ -36,6 +41,16 @@ func init() {
 	rootCmd.Flags().BoolVarP(&flag.Verbose, "verbose", "v", false, "Verbose mode")
 
 	rootCmd.Run = func(cmd1 *cobra.Command, args []string) {
+		if flag.PrintScriptList {
+			fmt.Print(scriptList)
+			os.Exit(0)
+		}
+
+		if len(args) < 1 {
+			fmt.Println("Please specify the target host")
+			os.Exit(1)
+		}
+
 		if hostIsValid(args[0]) {
 			flag.Host = args[0]
 		} else {

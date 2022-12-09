@@ -15,7 +15,7 @@ type Subdomain struct {
 
 func (s *Subdomain) Execute(host string) {
 	fmt.Println()
-	fmt.Println("Starting subdomain scan...")
+	fmt.Println("Start subdomain scan...")
 
 	userAgent := "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.3"
 

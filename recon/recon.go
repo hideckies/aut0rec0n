@@ -20,10 +20,11 @@ const logo2 = `
 type Recon struct {
 	Conf Config
 
-	sDns        *script.DNS
+	sDNS        *script.DNS
+	sSSL        *script.SSL
 	sSubdomain  *script.Subdomain
 	sWebArchive *script.WebArchive
-	sWhois      *script.Whois
+	sWHOIS      *script.WHOIS
 }
 
 // Run
@@ -36,11 +37,11 @@ func (r *Recon) Run() {
 
 	// DNS
 	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "dns") {
-		r.sDns = &script.DNS{}
-		r.sDns.Execute(host)
+		r.sDNS = &script.DNS{}
+		r.sDNS.Execute(host)
 
 		if !r.Conf.Quiet {
-			fmt.Print(r.sDns.Result)
+			fmt.Print(r.sDNS.Result)
 		}
 	}
 
@@ -49,11 +50,11 @@ func (r *Recon) Run() {
 
 	// WHOIS
 	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "whois") {
-		r.sWhois = &script.Whois{}
-		r.sWhois.Execute(host)
+		r.sWHOIS = &script.WHOIS{}
+		r.sWHOIS.Execute(host)
 
 		if !r.Conf.Quiet {
-			fmt.Print(r.sWhois.Result)
+			fmt.Print(r.sWHOIS.Result)
 		}
 	}
 
@@ -64,6 +65,16 @@ func (r *Recon) Run() {
 
 		if !r.Conf.Quiet {
 			fmt.Print(r.sSubdomain.Result)
+		}
+	}
+
+	// SSL certificate
+	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "ssl") {
+		r.sSSL = &script.SSL{}
+		r.sSSL.Execute(host)
+
+		if !r.Conf.Quiet {
+			fmt.Print(r.sSSL.Result)
 		}
 	}
 
@@ -115,8 +126,8 @@ func (r *Recon) adjustHost() string {
 	finalHost := ""
 	preHost := r.Conf.Host
 
-	if r.sDns != nil && len(r.sDns.Domains) > 0 {
-		newHost := r.sDns.Domains[0]
+	if r.sDNS != nil && len(r.sDNS.Domains) > 0 {
+		newHost := r.sDNS.Domains[0]
 		lastChar := newHost[len(newHost)-1:]
 		if lastChar == "." {
 			newHost = strings.TrimSuffix(newHost, ".")

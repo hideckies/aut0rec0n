@@ -4,7 +4,8 @@ type Flag struct {
 	Host string
 
 	// Recon scripts
-	Script []string
+	Script          []string
+	PrintScriptList bool
 
 	Color     bool
 	OutputDir string

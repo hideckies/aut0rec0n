@@ -10,7 +10,7 @@ type ASN struct {
 
 func (a *ASN) Execute(host string) {
 	fmt.Println()
-	fmt.Println("Starting ASN reconnaissance...")
+	fmt.Println("Start ASN reconnaissance...")
 
 	a.createResult(host)
 }
