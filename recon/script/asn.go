@@ -5,23 +5,15 @@ import (
 )
 
 type ASN struct {
-	Result string
+	Result         string
+	ResultColor    string
+	ResultContents string
 }
 
 func (a *ASN) Execute(host string) {
-	fmt.Println()
-	fmt.Println("Start ASN reconnaissance...")
-
-	a.createResult(host)
+	a.createResultContents()
 }
 
-func (a *ASN) createResult(host string) {
-	a.Result = fmt.Sprintf(`
-=================================================================
-ASN reconnaissance for %s
-=================================================================
-■ 
-=================================================================
-`,
-		host)
+func (a *ASN) createResultContents() {
+	a.ResultContents = fmt.Sprintf(``)
 }

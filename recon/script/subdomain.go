@@ -10,13 +10,12 @@ import (
 type Subdomain struct {
 	Subdomains []string
 
-	Result string
+	Result         string
+	ResultColor    string
+	ResultContents string
 }
 
 func (s *Subdomain) Execute(host string) {
-	fmt.Println()
-	fmt.Println("Start subdomain scan...")
-
 	userAgent := "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.3"
 
 	var subdomains []string
@@ -24,7 +23,7 @@ func (s *Subdomain) Execute(host string) {
 
 	s.Subdomains = subdomains
 
-	s.createResult(host)
+	s.createResultContents()
 }
 
 func enumFromGoogle(host string, userAgent string) []string {
@@ -65,19 +64,9 @@ func domainContains(domains []string, targetDomain string) bool {
 	return false
 }
 
-func (s *Subdomain) createResult(host string) {
+func (s *Subdomain) createResultContents() {
 	subdomains := []string{}
-	for _, subdomain := range s.Subdomains {
-		subdomains = append(subdomains, subdomain)
-	}
+	subdomains = append(subdomains, s.Subdomains...)
 
-	s.Result = fmt.Sprintf(`
-=================================================================
-Subdomains for %s
-=================================================================
-%s
-=================================================================
-`,
-		host,
-		strings.Join(subdomains, "\n"))
+	s.ResultContents = strings.Join(subdomains, "\n")
 }

@@ -7,7 +7,6 @@ type Config struct {
 
 	Color     bool
 	OutputDir string
-	NoOutput  bool
 	Quiet     bool
 	Verbose   bool
 }

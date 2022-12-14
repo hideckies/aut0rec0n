@@ -14,7 +14,9 @@ import (
 type WebArchive struct {
 	Archives []archive
 
-	Result string
+	Result         string
+	ResultColor    string
+	ResultContents string
 }
 
 type archive struct {
@@ -35,9 +37,6 @@ type closest struct {
 
 // Execute
 func (w *WebArchive) Execute(host string, subdomains []string) {
-	fmt.Println()
-	fmt.Println("Start web archives reconnaissance...")
-
 	domains := append(subdomains, host)
 	for _, domain := range domains {
 		// Wayback Machine API: https://archive.org/help/wayback_api.php
@@ -66,11 +65,11 @@ func (w *WebArchive) Execute(host string, subdomains []string) {
 		interval(2, 6)
 	}
 
-	w.createResult(host)
+	w.createResultContents()
 }
 
 // Create a result
-func (w *WebArchive) createResult(host string) {
+func (w *WebArchive) createResultContents() {
 	subResults := []string{}
 
 	for _, ar := range w.Archives {
@@ -88,15 +87,7 @@ func (w *WebArchive) createResult(host string) {
 		subResults = append(subResults, subResult)
 	}
 
-	w.Result = fmt.Sprintf(`
-=================================================================
-Web archives for %s
-=================================================================
-%v
-=================================================================
-`,
-		host,
-		strings.Join(subResults, "\n\n"))
+	w.ResultContents = fmt.Sprintf("%v", strings.Join(subResults, "\n\n"))
 }
 
 // Interval

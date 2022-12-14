@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var version = "0.0.2"
+var version = "0.0.3"
 
 var scriptList = `Scripts:
 asn, dns, port, ssl, subdomain, web-archive, whois
@@ -25,7 +25,8 @@ var rootCmd = &cobra.Command{
 	SilenceUsage: false,
 	Example: `
   aut0rec0n example.com
-  aut0rec0n example.com --script dns,subdomain`,
+  aut0rec0n example.com --script dns,subdomain
+  aut0rec0n example.com -o results`,
 	// Args: cobra.ExactArgs(1),
 }
 
@@ -34,10 +35,9 @@ func init() {
 
 	rootCmd.Flags().StringSliceVarP(&flag.Script, "script", "s", []string{"dns", "ssl", "subdomain", "whois"}, "Scripts to be executed")
 	rootCmd.Flags().BoolVarP(&flag.PrintScriptList, "script-list", "", false, "Print the list of scripts")
-	rootCmd.Flags().BoolVarP(&flag.Color, "color", "c", false, "Colorize the output")
-	rootCmd.Flags().StringVarP(&flag.OutputDir, "output", "o", "./aut0rec0n-result", "Output directory")
-	rootCmd.Flags().BoolVarP(&flag.NoOutput, "no-output", "", false, "Disable output")
-	rootCmd.Flags().BoolVarP(&flag.Quiet, "quiet", "q", false, "Quiet mode")
+	rootCmd.Flags().BoolVarP(&flag.Color, "color", "c", false, "Colorize terminal string")
+	rootCmd.Flags().StringVarP(&flag.OutputDir, "output", "o", "", "Output results to given folder")
+	rootCmd.Flags().BoolVarP(&flag.Quiet, "quiet", "q", false, "Quiet mode (it's recommended to add the `-o` option)")
 	rootCmd.Flags().BoolVarP(&flag.Verbose, "verbose", "v", false, "Verbose mode")
 
 	rootCmd.Run = func(cmd1 *cobra.Command, args []string) {
@@ -64,7 +64,6 @@ func init() {
 			Script:    flag.Script,
 			Color:     flag.Color,
 			OutputDir: flag.OutputDir,
-			NoOutput:  flag.NoOutput,
 			Quiet:     flag.Quiet,
 			Verbose:   flag.Verbose,
 		}

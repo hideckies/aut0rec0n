@@ -17,6 +17,8 @@ aut0rec0n example.com
 
 # Specify scripts
 aut0rec0n example.com --script dns,subdomain
+# Output results to given folder
+aut0rec0n example.com -o results
 ```
 
 To print all scripts:
