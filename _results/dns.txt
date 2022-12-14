@@ -1,0 +1,22 @@
+=================================================================
+DNS records for hdks.org
+=================================================================
+■ IP Address
+34.120.54.55
+2600:1901:0:6d85::■ Domain
+
+■ CNAME
+hdks.org.
+■ MX
+eforward1.registrar-servers.com.
+eforward3.registrar-servers.com.
+eforward2.registrar-servers.com.
+eforward4.registrar-servers.com.
+eforward5.registrar-servers.com.
+■ NS
+dns2.registrar-servers.com.
+dns1.registrar-servers.com.
+■ TXT
+google-site-verification=BKZ2p04YDMn93ZIyjCQkM3QGRf-eglIyTGHgkRD76aE
+v=spf1 include:spf.efwd.registrar-servers.com ~all
+=================================================================

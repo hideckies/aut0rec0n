@@ -5,14 +5,12 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/fatih/color"
 	"github.com/hideckies/aut0rec0n/recon/script"
+	"github.com/hideckies/aut0rec0n/recon/template"
 )
 
 const logo = `
-▄▀█ █░█ ▀█▀ █▀█ █▀█ █▀▀ █▀▀ █▀█ █▄░█
-█▀█ █▄█ ░█░ █▄█ █▀▄ ██▄ █▄▄ █▄█ █░▀█`
-
-const logo2 = `
 █▀▀█ █──█ ▀▀█▀▀ █▀▀█ █▀▀█ █▀▀ █▀▀ █▀▀█ █▀▀▄ 
 █▄▄█ █──█ ──█── █▄▀█ █▄▄▀ █▀▀ █── █▄▀█ █──█ 
 ▀──▀ ─▀▀▀ ──▀── █▄▄█ ▀─▀▀ ▀▀▀ ▀▀▀ █▄▄█ ▀──▀`
@@ -30,18 +28,30 @@ type Recon struct {
 // Run
 func (r *Recon) Run() {
 	r.banner()
-	fmt.Println("Start1ng a rec0n...")
-	fmt.Println()
+	fmt.Println("Start rec0n...")
 
 	host := r.Conf.Host
 
 	// DNS
 	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "dns") {
+		fmt.Printf("\n\n\n")
 		r.sDNS = &script.DNS{}
 		r.sDNS.Execute(host)
 
+		results := template.CreateResultWithTemplate(
+			fmt.Sprintf("DNS records for %s", host),
+			r.sDNS.ResultContents,
+			r.Conf.Color)
+
+		r.sDNS.Result = results[0]
+		r.sDNS.ResultColor = results[1]
+
 		if !r.Conf.Quiet {
-			fmt.Print(r.sDNS.Result)
+			if r.Conf.Color {
+				fmt.Print(r.sDNS.ResultColor)
+			} else {
+				fmt.Print(r.sDNS.Result)
+			}
 		}
 	}
 
@@ -50,36 +60,76 @@ func (r *Recon) Run() {
 
 	// WHOIS
 	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "whois") {
+		fmt.Printf("\n\n\n")
 		r.sWHOIS = &script.WHOIS{}
 		r.sWHOIS.Execute(host)
 
+		results := template.CreateResultWithTemplate(
+			fmt.Sprintf("WHOIS for %s", host),
+			r.sWHOIS.ResultContents,
+			r.Conf.Color)
+
+		r.sWHOIS.Result = results[0]
+		r.sWHOIS.ResultColor = results[1]
+
 		if !r.Conf.Quiet {
-			fmt.Print(r.sWHOIS.Result)
+			if r.Conf.Color {
+				fmt.Print(r.sWHOIS.ResultColor)
+			} else {
+				fmt.Print(r.sWHOIS.Result)
+			}
 		}
 	}
 
 	// Subdomain
 	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "subdomain") {
+		fmt.Printf("\n\n\n")
 		r.sSubdomain = &script.Subdomain{}
 		r.sSubdomain.Execute(host)
 
+		results := template.CreateResultWithTemplate(
+			fmt.Sprintf("Subdomains for %s", host),
+			r.sSubdomain.ResultContents,
+			r.Conf.Color)
+
+		r.sSubdomain.Result = results[0]
+		r.sSubdomain.ResultColor = results[1]
+
 		if !r.Conf.Quiet {
-			fmt.Print(r.sSubdomain.Result)
+			if r.Conf.Color {
+				fmt.Print(r.sSubdomain.ResultColor)
+			} else {
+				fmt.Print(r.sSubdomain.Result)
+			}
 		}
 	}
 
 	// SSL certificate
 	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "ssl") {
+		fmt.Printf("\n\n\n")
 		r.sSSL = &script.SSL{}
 		r.sSSL.Execute(host)
 
+		results := template.CreateResultWithTemplate(
+			fmt.Sprintf("SSL certificate for %s", host),
+			r.sSSL.ResultContents,
+			r.Conf.Color)
+
+		r.sSSL.Result = results[0]
+		r.sSSL.ResultColor = results[1]
+
 		if !r.Conf.Quiet {
-			fmt.Print(r.sSSL.Result)
+			if r.Conf.Color {
+				fmt.Print(r.sSSL.ResultColor)
+			} else {
+				fmt.Print(r.sSSL.Result)
+			}
 		}
 	}
 
 	// Web archive
 	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "web-archive") {
+		fmt.Printf("\n\n\n")
 		r.sWebArchive = &script.WebArchive{}
 
 		var subdomains []string
@@ -91,34 +141,58 @@ func (r *Recon) Run() {
 
 		r.sWebArchive.Execute(host, subdomains)
 
+		results := template.CreateResultWithTemplate(
+			fmt.Sprintf("Web archives for %s", host),
+			r.sWebArchive.ResultContents,
+			r.Conf.Color)
+
+		r.sWebArchive.Result = results[0]
+		r.sWebArchive.ResultColor = results[1]
+
 		if !r.Conf.Quiet {
-			fmt.Print(r.sWebArchive.Result)
+			if r.Conf.Color {
+				fmt.Print(r.sWebArchive.ResultColor)
+			} else {
+				fmt.Print(r.sWebArchive.Result)
+			}
 		}
 	}
 
 	// Port
-	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "port") {
-		// fmt.Println("Port scanning")
-	}
+	// if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "port") {
+	// 	fmt.Println("Port scanning")
+	// }
 
-	if !r.Conf.NoOutput {
+	if r.Conf.OutputDir != "" {
 		Output(r)
 	}
 }
 
 // Print banner
 func (r *Recon) banner() {
-	fmt.Println(logo2)
-	fmt.Println()
-	// fmt.Printf("|------------------------------+\n")
-	fmt.Printf("|- Host		: %s\n", r.Conf.Host)
-	fmt.Printf("|- Script	: %+v\n", strings.Join(r.Conf.Script, ","))
-	fmt.Printf("|- Output	: %s\n", r.Conf.OutputDir)
-	fmt.Printf("|- Color	: %t\n", r.Conf.Color)
-	fmt.Printf("|- Quiet	: %t\n", r.Conf.Quiet)
-	fmt.Printf("|- Verbose	: %t\n", r.Conf.Verbose)
-	// fmt.Printf("|------------------------------+\n")
-	fmt.Println()
+	prints := make([]string, 10)
+	prints[0] = logo
+	prints[1] = "\n\n"
+	prints[2] = "|--------------------------------------------------"
+	prints[3] = fmt.Sprintf("|- %-10s : %s\n", "Host", r.Conf.Host)
+	prints[4] = fmt.Sprintf("|- %-10s : %v\n", "Script", strings.Join(r.Conf.Script, ","))
+	prints[5] = fmt.Sprintf("|- %-10s : %s\n", "Output", r.Conf.OutputDir)
+	prints[6] = fmt.Sprintf("|- %-10s : %t\n", "Color", r.Conf.Color)
+	prints[7] = fmt.Sprintf("|- %-10s : %t\n", "Quiet", r.Conf.Quiet)
+	prints[8] = fmt.Sprintf("|- %-10s : %t\n", "Verbose", r.Conf.Verbose)
+	prints[9] = "|--------------------------------------------------"
+
+	if r.Conf.Color {
+		for _, opt := range prints {
+			color.Yellow(opt)
+		}
+	} else {
+		for _, opt := range prints {
+			fmt.Print(opt)
+		}
+	}
+
+	fmt.Printf("\n\n\n")
 }
 
 // Host adjustment

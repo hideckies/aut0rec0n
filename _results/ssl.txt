@@ -1,0 +1,11 @@
+=================================================================
+SSL certificate for hdks.org
+=================================================================
+Server support SSL certificate.
+■ Hostname
+Hostname is correctly listed in the certicate.
+■ Issuer
+CN=E1,O=Let's Encrypt,C=US
+■ Expiration Date
+Thursday, 09-Feb-23 23:27:36 UTC
+=================================================================

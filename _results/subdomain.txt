@@ -1,0 +1,9 @@
+=================================================================
+Subdomains for hdks.org
+=================================================================
+blog.hdks.org
+exploit-notes.hdks.org
+australopithecus.hdks.org
+polyangels.hdks.org
+hackfruit.hdks.org
+=================================================================

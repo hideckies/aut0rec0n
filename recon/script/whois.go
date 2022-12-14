@@ -8,13 +8,13 @@ import (
 
 type WHOIS struct {
 	Records string
-	Result  string
+
+	Result         string
+	ResultColor    string
+	ResultContents string
 }
 
 func (w *WHOIS) Execute(host string) {
-	fmt.Println()
-	fmt.Println("Start WHOIS reconnaissance...")
-
 	req, err := whois.NewRequest(host)
 	if err != nil {
 		fmt.Printf("! %v\n", err)
@@ -26,17 +26,5 @@ func (w *WHOIS) Execute(host string) {
 	}
 	w.Records = string(res.Body)
 
-	w.createResult(host)
-}
-
-func (w *WHOIS) createResult(host string) {
-	w.Result = fmt.Sprintf(`
-=================================================================
-WHOIS for %s
-=================================================================
-%s
-=================================================================
-`,
-		host,
-		w.Records)
+	w.ResultContents = w.Records
 }

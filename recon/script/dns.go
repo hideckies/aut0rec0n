@@ -14,13 +14,12 @@ type DNS struct {
 	NSs     []*net.NS
 	TXTs    []string
 
-	Result string
+	Result         string
+	ResultColor    string
+	ResultContents string
 }
 
 func (d *DNS) Execute(host string) {
-	fmt.Println()
-	fmt.Println("Start DNS reconnaissance...")
-
 	// IP Address
 	ips, err := net.LookupIP(host)
 	if err != nil {
@@ -62,11 +61,11 @@ func (d *DNS) Execute(host string) {
 
 	// zone transfer (AXFR)
 
-	d.createResult(host)
+	d.createResultContents()
 }
 
 // create a result
-func (d *DNS) createResult(host string) {
+func (d *DNS) createResultContents() {
 	ips := []string{}
 	for _, ip := range d.IPs {
 		ips = append(ips, ip.String())
@@ -82,25 +81,7 @@ func (d *DNS) createResult(host string) {
 		nss = append(nss, ns.Host)
 	}
 
-	d.Result = fmt.Sprintf(`
-=================================================================
-DNS records for %s
-=================================================================
-■ IP Address
-%s
-■ Domain
-%s
-■ CNAME
-%s
-■ MX
-%s
-■ NS
-%s
-■ TXT
-%s
-=================================================================
-`,
-		host,
+	d.ResultContents = fmt.Sprintf("■ IP Address\n%s■ Domain\n%s\n■ CNAME\n%s\n■ MX\n%s\n■ NS\n%s\n■ TXT\n%s",
 		strings.Join(ips, "\n"),
 		strings.Join(d.Domains, "\n"),
 		d.CNAME,
