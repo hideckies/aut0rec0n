@@ -11,20 +11,30 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var version = "0.0.3"
+var version = "0.0.4"
 
-var scriptList = `Scripts:
-asn, dns, port, ssl, subdomain, web-archive, whois
+var scriptList = `A list of scripts:
+  all
+  asn *under development
+  dns
+  port-scan *under development
+  ssl
+  subdomain
+  web-archive
+  whois
+
+Examples:
+  aut0rec0n example.com --script all
+  aut0rec0n example.com --script dns,subdomain,port-scan
 `
 
 var rootCmd = &cobra.Command{
 	Use:          "aut0rec0n",
 	Version:      version,
-	Short:        "An automatic reconnaissance tool",
-	Long:         ``,
+	Short:        "aut0rec0n - an automatic reconnaissance tool",
+	Long:         `aut0rec0n - an automatic reconnaissance tool`,
 	SilenceUsage: false,
-	Example: `
-  aut0rec0n example.com
+	Example: `  aut0rec0n example.com
   aut0rec0n example.com --script dns,subdomain
   aut0rec0n example.com -o results`,
 	// Args: cobra.ExactArgs(1),
@@ -33,12 +43,12 @@ var rootCmd = &cobra.Command{
 func init() {
 	flag := Flag{}
 
-	rootCmd.Flags().StringSliceVarP(&flag.Script, "script", "s", []string{"dns", "ssl", "subdomain", "whois"}, "Scripts to be executed")
-	rootCmd.Flags().BoolVarP(&flag.PrintScriptList, "script-list", "", false, "Print the list of scripts")
-	rootCmd.Flags().BoolVarP(&flag.Color, "color", "c", false, "Colorize terminal string")
-	rootCmd.Flags().StringVarP(&flag.OutputDir, "output", "o", "", "Output results to given folder")
-	rootCmd.Flags().BoolVarP(&flag.Quiet, "quiet", "q", false, "Quiet mode (it's recommended to add the `-o` option)")
-	rootCmd.Flags().BoolVarP(&flag.Verbose, "verbose", "v", false, "Verbose mode")
+	rootCmd.Flags().StringSliceVarP(&flag.Script, "script", "s", []string{"dns", "ssl", "subdomain", "whois"}, "scripts to be executed")
+	rootCmd.Flags().BoolVarP(&flag.PrintScriptList, "script-list", "", false, "prints the list of scripts")
+	rootCmd.Flags().BoolVarP(&flag.Color, "color", "c", false, "colorizes terminal string")
+	rootCmd.Flags().StringVarP(&flag.OutputDir, "output", "o", "", "outputs results to given folder")
+	rootCmd.Flags().BoolVarP(&flag.Quiet, "quiet", "q", false, "enables quiet mode (it's recommended to add the '-o' option otherwise there're nothing shown in results!)")
+	rootCmd.Flags().BoolVarP(&flag.Verbose, "verbose", "v", false, "enables verbose mode")
 
 	rootCmd.Run = func(cmd1 *cobra.Command, args []string) {
 		if flag.PrintScriptList {
@@ -47,14 +57,15 @@ func init() {
 		}
 
 		if len(args) < 1 {
-			fmt.Println("Please specify the target host")
+			fmt.Printf("Please specify the target host\n\n")
+			fmt.Print(rootCmd.UsageString())
 			os.Exit(1)
 		}
 
 		if hostIsValid(args[0]) {
 			flag.Host = args[0]
 		} else {
-			fmt.Println("Invalid host given")
+			fmt.Printf("Invalid host given\n\n")
 			fmt.Print(rootCmd.UsageString())
 			os.Exit(1)
 		}

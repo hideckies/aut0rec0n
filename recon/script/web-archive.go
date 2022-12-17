@@ -44,14 +44,14 @@ func (w *WebArchive) Execute(host string, subdomains []string) {
 
 		res, err := http.Get(apiUrl)
 		if err != nil {
-			fmt.Printf("%s", err)
+			fmt.Printf("Web Archives Error: %s", err)
 		}
 
 		defer res.Body.Close()
 
 		body, err := io.ReadAll(res.Body)
 		if err != nil {
-			fmt.Printf("%s", err)
+			fmt.Printf("Web Archives Error: %s", err)
 		}
 
 		var ar archive

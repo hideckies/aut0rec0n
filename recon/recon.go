@@ -18,6 +18,7 @@ const logo = `
 type Recon struct {
 	Conf Config
 
+	sASN        *script.ASN
 	sDNS        *script.DNS
 	sSSL        *script.SSL
 	sSubdomain  *script.Subdomain
@@ -77,6 +78,35 @@ func (r *Recon) Run() {
 				fmt.Print(r.sWHOIS.ResultColor)
 			} else {
 				fmt.Print(r.sWHOIS.Result)
+			}
+		}
+	}
+
+	// ASN
+	if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "asn") {
+		fmt.Printf("\n\n\n")
+		r.sASN = &script.ASN{}
+
+		ip := ""
+		if r.sDNS != nil && len(r.sDNS.IPs) > 0 {
+			ip = r.sDNS.IPs[0].String()
+		}
+
+		r.sASN.Execute(host, ip)
+
+		results := template.CreateResultWithTemplate(
+			fmt.Sprintf("ASNs for %s", host),
+			r.sASN.ResultContents,
+			r.Conf.Color)
+
+		r.sASN.Result = results[0]
+		r.sASN.ResultColor = results[1]
+
+		if !r.Conf.Quiet {
+			if r.Conf.Color {
+				fmt.Print(r.sASN.ResultColor)
+			} else {
+				fmt.Print(r.sASN.Result)
 			}
 		}
 	}
@@ -159,7 +189,7 @@ func (r *Recon) Run() {
 	}
 
 	// Port
-	// if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "port") {
+	// if contains(r.Conf.Script, "all") || contains(r.Conf.Script, "port-scan") {
 	// 	fmt.Println("Port scanning")
 	// }
 
@@ -173,14 +203,14 @@ func (r *Recon) banner() {
 	prints := make([]string, 10)
 	prints[0] = logo
 	prints[1] = "\n\n"
-	prints[2] = "|--------------------------------------------------"
+	prints[2] = "|--------------------------------------------------\n"
 	prints[3] = fmt.Sprintf("|- %-10s : %s\n", "Host", r.Conf.Host)
 	prints[4] = fmt.Sprintf("|- %-10s : %v\n", "Script", strings.Join(r.Conf.Script, ","))
 	prints[5] = fmt.Sprintf("|- %-10s : %s\n", "Output", r.Conf.OutputDir)
 	prints[6] = fmt.Sprintf("|- %-10s : %t\n", "Color", r.Conf.Color)
 	prints[7] = fmt.Sprintf("|- %-10s : %t\n", "Quiet", r.Conf.Quiet)
 	prints[8] = fmt.Sprintf("|- %-10s : %t\n", "Verbose", r.Conf.Verbose)
-	prints[9] = "|--------------------------------------------------"
+	prints[9] = "|--------------------------------------------------\n"
 
 	if r.Conf.Color {
 		for _, opt := range prints {

@@ -10,7 +10,11 @@ type ASN struct {
 	ResultContents string
 }
 
-func (a *ASN) Execute(host string) {
+func (a *ASN) Execute(host string, ip string) {
+	if ip == "" {
+		fmt.Println("ASN: ip address is not specified.")
+	}
+
 	a.createResultContents()
 }
 
