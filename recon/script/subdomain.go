@@ -27,7 +27,7 @@ func (s *Subdomain) Execute(host string) {
 }
 
 func enumFromGoogle(host string, userAgent string) []string {
-	searchTxt := fmt.Sprintf("site:%s", host)
+	searchTxt := fmt.Sprintf("site:%s -www", host)
 	results, err := googlesearch.Search(
 		nil,
 		searchTxt,

@@ -17,12 +17,12 @@ type WHOIS struct {
 func (w *WHOIS) Execute(host string) {
 	req, err := whois.NewRequest(host)
 	if err != nil {
-		fmt.Printf("! %v\n", err)
+		fmt.Printf("WHOIS Error: %v\n", err)
 		return
 	}
 	res, err := whois.DefaultClient.Fetch(req)
 	if err != nil {
-		fmt.Printf("! %v\n", err)
+		fmt.Printf("WHOIS Error: %v\n", err)
 	}
 	w.Records = string(res.Body)
 

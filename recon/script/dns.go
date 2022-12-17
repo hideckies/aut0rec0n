@@ -81,7 +81,7 @@ func (d *DNS) createResultContents() {
 		nss = append(nss, ns.Host)
 	}
 
-	d.ResultContents = fmt.Sprintf("■ IP Address\n%s■ Domain\n%s\n■ CNAME\n%s\n■ MX\n%s\n■ NS\n%s\n■ TXT\n%s",
+	d.ResultContents = fmt.Sprintf("■ IP Address\n%s\n■ Domain\n%s\n■ CNAME\n%s\n■ MX\n%s\n■ NS\n%s\n■ TXT\n%s",
 		strings.Join(ips, "\n"),
 		strings.Join(d.Domains, "\n"),
 		d.CNAME,
