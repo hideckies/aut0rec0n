@@ -2,46 +2,38 @@
 
 A automatic reconnaissance tool.
 
-- **DNS** - Golang `net` package
-- **Subdomain** - Google, [rocketlaunchr/google-search](https://github.com/rocketlaunchr/google-search)
-- **Web Archives** - Wayback Machine API
-- **WHOIS** - [domainr/whois](https://github.com/domainr/whois)
+- **DNS**
+- **Port Scanning**
+- **Subdomain**
     
-
 <br />
 
 ## Usage
 
 ```sh
-aut0rec0n example.com
+aut0rec0n -H example.com
 
-# Specify scripts
-aut0rec0n example.com --script dns,subdomain
-# Output results to given folder
-aut0rec0n example.com -o results
-```
-
-To print all scripts:
-
-```sh
-aut0rec0n --script-list
+# Specify a method
+aut0rec0n dns -H example.com
+aut0rec0n port -H example.com
+aut0rec0n subdomain -H example.com
 ```
 
 <br />
 
 ## Installation
 
-- **Option 1. Go install**
+### Option 1. Go install
 
-    ```sh
-    go install github.com/hideckies/aut0rec0n@latest
-    ```
+```sh
+go install github.com/hideckies/aut0rec0n@latest
+```
 
-- **Option 2. Clone the Repo**
+### Option 2. Clone the Repo
 
-    ```sh
-    git clone https://github.com/hideckies/aut0rec0n.git
-    cd aut0rec0n
-    go get ; go build
-    ```
+```sh
+git clone https://github.com/hideckies/aut0rec0n.git
+cd aut0rec0n
+go get ; go build
+```
 
