@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -34,12 +36,23 @@ func main() {
 		time.Sleep(100 * time.Millisecond)
 	}
 	if cmd.Options.ReconType == "all" || cmd.Options.ReconType == "port" {
-		p := recon.NewPort(cmd.Options.Host)
-		err := p.Execute()
+		// Confirmation
+		fmt.Print("Would you like to do a port scan?[y/N]: ")
+		reader := bufio.NewReader(os.Stdin)
+		ans, _, err := reader.ReadRune()
 		if err != nil {
-			color.Red("%s", err)
+			log.Fatal(err)
 		}
-		time.Sleep(100 * time.Millisecond)
+		if ans == 'y' {
+			p := recon.NewPort(cmd.Options.Host)
+			err := p.Execute()
+			if err != nil {
+				color.Red("%s", err)
+			}
+			time.Sleep(100 * time.Millisecond)
+		} else {
+			color.Yellow("No port scanning.")
+		}
 	}
 	if cmd.Options.ReconType == "all" || cmd.Options.ReconType == "subdomain" {
 		s := recon.NewSubdomain(cmd.Options.Host)

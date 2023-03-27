@@ -83,7 +83,7 @@ func (p *Port) portScan() {
 			}
 		}
 	} else {
-		color.Yellow("nmap could not be executed.\ntry custom scan.")
+		color.Yellow("nmap could not be executed.\naut0rec0n tries a custom scanner.")
 		p.customScan()
 	}
 }
