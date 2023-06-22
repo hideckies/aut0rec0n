@@ -35,7 +35,7 @@ func init() {
 	rootCmd.AddCommand(subdomainCmd)
 	rootCmd.AddCommand(versionCmd)
 
-	rootCmd.PersistentFlags().StringVarP(&Options.Host, "host", "H", "", "Hostname for reconnaissance")
+	rootCmd.PersistentFlags().StringVarP(&Options.Host, "host", "H", "", "Host for reconnaissance")
 	rootCmd.MarkPersistentFlagRequired("host")
 }
 

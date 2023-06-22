@@ -6,9 +6,9 @@ require (
 	github.com/domainr/whois v0.1.0
 	github.com/fatih/color v1.14.1
 	github.com/rocketlaunchr/google-search v1.1.5
-	github.com/schollz/progressbar v1.0.0
 	github.com/schollz/progressbar/v3 v3.13.0
 	github.com/spf13/cobra v1.6.1
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
