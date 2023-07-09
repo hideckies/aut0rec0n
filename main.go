@@ -10,7 +10,9 @@ import (
 	"github.com/hideckies/aut0rec0n/cmd"
 	"github.com/hideckies/aut0rec0n/pkg/config"
 	"github.com/hideckies/aut0rec0n/pkg/output"
-	"github.com/hideckies/aut0rec0n/pkg/recon"
+	"github.com/hideckies/aut0rec0n/pkg/recon/dns"
+	"github.com/hideckies/aut0rec0n/pkg/recon/port"
+	"github.com/hideckies/aut0rec0n/pkg/recon/subdomain"
 
 	"github.com/fatih/color"
 )
@@ -34,9 +36,10 @@ func main() {
 	output.Banner()
 	fmt.Println()
 
+	// DNS
 	if cmd.Options.ReconType == "all" || cmd.Options.ReconType == "dns" {
-		d := recon.NewDns(cmd.Options.Host)
-		err := d.Execute()
+		r := dns.NewRunner(cmd.Options.Host)
+		err := r.Run()
 		if err != nil {
 			color.Red("%s", err)
 		}
@@ -45,9 +48,10 @@ func main() {
 
 	fmt.Println()
 
+	// Subdomain
 	if cmd.Options.ReconType == "all" || cmd.Options.ReconType == "subdomain" {
-		s := recon.NewSubdomain(cmd.Options.Host, conf)
-		err := s.Execute()
+		r := subdomain.NewRunner(cmd.Options.Host, conf)
+		err := r.Run()
 		if err != nil {
 			color.Red("%s", err)
 		}
@@ -56,6 +60,7 @@ func main() {
 
 	fmt.Println()
 
+	// Port scanning
 	if cmd.Options.ReconType == "all" || cmd.Options.ReconType == "port" {
 		// Confirmation
 		fmt.Print("Would you like to do a port scan?[y/N]: ")
@@ -65,8 +70,8 @@ func main() {
 			log.Fatal(err)
 		}
 		if ans == 'y' {
-			p := recon.NewPort(cmd.Options.Host)
-			err := p.Execute()
+			r := port.NewRunner(cmd.Options.Host)
+			err := r.Run()
 			if err != nil {
 				color.Red("%s", err)
 			}
