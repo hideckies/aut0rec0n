@@ -6,7 +6,6 @@ An automatic reconnaissance tool.
 - Port Scanning
 - Subdomain
 
-
 <br />
 
 ## APIs/Resources
@@ -51,5 +50,3 @@ go get ; go build
 ```
 
 <br />
-
-## Set API Keys
